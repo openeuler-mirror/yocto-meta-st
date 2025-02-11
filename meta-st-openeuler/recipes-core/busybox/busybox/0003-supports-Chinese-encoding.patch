@@ -1,0 +1,45 @@
+diff -ur origin/libbb/printable_string.c busybox-1.36.1/libbb/printable_string.c
+--- origin/libbb/printable_string.c	2021-01-01 18:52:27.000000000 +0800
++++ busybox-1.36.1/libbb/printable_string.c	2024-08-01 15:09:01.477827808 +0800
+@@ -28,8 +28,6 @@
+ 		}
+ 		if (c < ' ')
+ 			break;
+-		if (c >= 0x7f)
+-			break;
+ 		s++;
+ 	}
+ 
+@@ -42,7 +40,8 @@
+ 			unsigned char c = *d;
+ 			if (c == '\0')
+ 				break;
+-			if (c < ' ' || c >= 0x7f)
++			/* Enable Chinese Chars */
++			if (c < ' ' )
+ 				*d = '?';
+ 			d++;
+ 		}
+diff -ur origin/libbb/unicode.c busybox-1.36.1/libbb/unicode.c
+--- origin/libbb/unicode.c	2021-01-01 18:52:27.000000000 +0800
++++ busybox-1.36.1/libbb/unicode.c	2024-08-01 15:11:53.062462106 +0800
+@@ -1027,7 +1027,8 @@
+ 					while ((int)--width >= 0);
+ 					break;
+ 				}
+-				*d++ = (c >= ' ' && c < 0x7f) ? c : '?';
++				/*Enable Chinese Char*/
++				*d++ = (c >= ' ') ? c : '?';
+ 				src++;
+ 			}
+ 			*d = '\0';
+@@ -1035,7 +1036,8 @@
+ 			d = dst = xstrndup(src, width);
+ 			while (*d) {
+ 				unsigned char c = *d;
+-				if (c < ' ' || c >= 0x7f)
++				/*Enable Chinese Char*/
++				if (c < ' ')
+ 					*d = '?';
+ 				d++;
+ 			}
