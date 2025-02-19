@@ -8,13 +8,12 @@ inherit external-dt
 DEPENDS += "rsync-native"
 
 # fetch kernel and patch for myir-st-kernel
-OPENEULER_REPO_NAME = "myir-st-kernel-${PV}"
+OPENEULER_LOCAL_NAME = "myir-st-kernel-${PV}"
 OPENEULER_REPO_NAMES = "myir-st-kernel-${PV}"
 
 # remove origin kernel and patch in linux-openeuler.inc
 SRC_URI:remove = " \
     file://kernel-${PV} \
-    file://src-kernel-${PV} \
     file://patches/${ARCH}/0001-arm64-add-zImage-support-for-arm64.patch \
     file://patches/${ARCH}/0001-kernel6.6-arm64-add-zImage-support-for-arm64.patch \
 "
@@ -37,11 +36,11 @@ KERNEL_CONFIG_FRAGMENTS += " file://openeuler-adapt.cfg "
 
 
 SRC_URI:append = " \
-    file://myir-st-kernel-6.6 \
+    file://myir-st-kernel-${PV} \
     ${KERNEL_CONFIG_FRAGMENTS} \
 "
 
-S = "${WORKDIR}/myir-st-kernel-6.6"
+S = "${WORKDIR}/myir-st-kernel-${PV}"
 
 # ----------------------------
 # defconfig configuration
