@@ -12,6 +12,8 @@ IMAGE_ROOTFS_EXTRA_SPACE = "0"
 # Add specific package for our image:
 PACKAGE_INSTALL += " \
     ${@bb.utils.contains('MACHINE_FEATURES', 'gpu', d.getVar('GPU_USERLAND_LIBRARIES_INSTALL') or '', '', d)} \
+    wayland \
+    packagegroup-core-boot \
 "
 
 # Remove specific systemd task

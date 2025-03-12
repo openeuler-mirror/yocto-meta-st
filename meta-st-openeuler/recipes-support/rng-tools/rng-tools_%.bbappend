@@ -11,4 +11,4 @@ do_install:append() {
     # install udev rule
     install -D -p -m0644 ${WORKDIR}/71-hwrng.rules ${D}${sysconfdir}/udev/rules.d/71-hwrng.rules
 }
-FILES:${PN}-service += "${sysconfdir}/udev"
+FILES:${PN} += "${sysconfdir}/udev"
