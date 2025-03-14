@@ -48,7 +48,7 @@ S = "${WORKDIR}/myir-st-kernel-${PV}"
 # no out tree defconfig
 OPENEULER_KERNEL_CONFIG = ""
 # in tree defconfig
-KBUILD_DEFCONFIG = "defconfig"
+KBUILD_DEFCONFIG:myd-ld25x-oee = "myd_stm32mp257x_defconfig"
 
 #---------------------------------------------------------------
 # Module kernel signature
