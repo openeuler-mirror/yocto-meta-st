@@ -10,18 +10,9 @@ S = "${WORKDIR}/git/${TTTECH_DIR}"
 
 PV = "st-1.6.8"
 
-DEPENDS = "libbase de-ptp-bin libtsn libyang libnetconf2 sysrepo coreutils openssh openssl openssh-native libbsd"
-
 FILES:${PN} += "${libdir}/sysrepo/* /etc/netopeer2/*"
 
-inherit cmake pkgconfig
-
-# Specify any options you want to pass to cmake using EXTRA_OECMAKE:
-EXTRA_OECMAKE = " -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE:String=Release -DSYSREPOCTL_EXECUTABLE=/usr/bin/sysrepoctl -DSYSREPOCFG_EXECUTABLE=/usr/bin/sysrepocfg -DCHMOD_EXECUTABLE=/bin/chmod"
-EXTRA_OECMAKE += "-DLIBPTP=${STAGING_LIBDIR}/libptp.so.0  -DLIBPTP_MANAGEMENT=${STAGING_LIBDIR}/libptp_management.so.0"
-EXTRA_OECMAKE += "-DPTP_INC_DIR=${STAGING_INCDIR}/xr7ptp/include -DPTP_INC_MGMT_DIR==${STAGING_INCDIR}"
-
-do_install:append () {
+do_install() {
     install -d ${D}/etc/netopeer2/yang ${D}/usr/lib/sysrepo/plugins/
     if [ -d ${S}/binaries/ ]; then
         install -m 0644 ${S}/binaries/etc/netopeer2/yang/*.yang ${D}/etc/netopeer2/yang
@@ -37,4 +28,5 @@ do_install:append () {
         fi
     fi
 }
+
 INSANE_SKIP:${PN} = "already-stripped file-rdeps"

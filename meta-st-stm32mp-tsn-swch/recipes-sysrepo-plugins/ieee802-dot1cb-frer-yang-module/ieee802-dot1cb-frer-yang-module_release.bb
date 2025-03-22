@@ -12,7 +12,7 @@ PV = "st-1.6.8"
 
 DEPENDS = "libbase libtsn libyang libnetconf2 sysrepo coreutils openssh openssl openssh-native libbsd"
 
-FILES:${PN} += "/usr/lib/sysrepo/* /etc/netopeer2/*"
+FILES:${PN} += "${libdir}/sysrepo/* /etc/netopeer2/*"
 
 inherit cmake pkgconfig
 
