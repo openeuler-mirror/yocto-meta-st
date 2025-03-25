@@ -48,4 +48,3 @@ do_install() {
 
 INSANE_SKIP:${PN} = "ldflags"
 FILES:${PN} += "${prefix}/local/bin/${PN}-${PVB}/tools/nbg_benchmark"
-RDEPENDS:${PN} += " x-linux-ai-benchmark "
