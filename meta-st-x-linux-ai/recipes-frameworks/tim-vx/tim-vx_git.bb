@@ -63,7 +63,7 @@ do_install() {
     # Install libtim-vx.so into libdir
     install -d ${D}${libdir}
     install -d ${D}/usr/local/bin/${PN}-${PVB}
-    install -d ${D}/home/weston
+    #install -d ${D}/home/weston
 
     install -m 0755 ${WORKDIR}/build/src/tim/libtim-vx.so ${D}${libdir}/libtim-vx.so.${PVB}
     patchelf --set-soname libtim-vx.so ${D}${libdir}/libtim-vx.so.${PVB}
@@ -82,7 +82,7 @@ do_install() {
     install -d ${D}${includedir}
     cp -r ${S}/include/tim ${D}${includedir}
     cp -r ${STAGING_INCDIR}/CL/cl_viv_vx_ext.h ${D}/usr/local/bin/${PN}-${PVB}/cl_viv_vx_ext.h
-    cp -r ${STAGING_INCDIR}/CL/cl_viv_vx_ext.h ${D}/home/weston/cl_viv_vx_ext.h
+    #cp -r ${STAGING_INCDIR}/CL/cl_viv_vx_ext.h ${D}/home/weston/cl_viv_vx_ext.h
 }
 
 PACKAGES =+ "${PN}-tools"
@@ -90,7 +90,6 @@ FILES_SOLIBSDEV = ""
 
 FILES:${PN}-tools = "   /usr/local/bin/${PN}-${PVB}/TIM-VX_test \
 			/usr/local/bin/${PN}-${PVB}/cl_viv_vx_ext.h \
-			/home/weston/cl_viv_vx_ext.h \
 			${libdir}/libgtest_main.so.${PV_googletest} \
 			${libdir}/libgtest.so.${PV_googletest} \
 			${libdir}/libgmock_main.so \
