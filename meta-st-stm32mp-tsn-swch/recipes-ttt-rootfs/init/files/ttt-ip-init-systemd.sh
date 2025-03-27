@@ -1,6 +1,6 @@
 #!/bin/sh
 
-REF_ETH_INTERFACE=to_be_adapted_to_the_board
+REF_ETH_INTERFACE=eth0
 IP_REF_NAME=42080000.bus/42080000.bus:ttt-sw@4c000000/4c000000.deip-sw
 
 # read mac address
@@ -36,24 +36,25 @@ wait_sysfs() {
 
 st_configure() {
     get_soc_path
-    wait_sysfs $SOC_PATH/$IP_REF_NAME/net/sw0p3/phy/mdiobus
-    if [ -e $SOC_PATH/$IP_REF_NAME/net/sw0p3/phy/mdiobus ]; then
-        echo -n stmmac-1:04 > $SOC_PATH/$IP_REF_NAME/net/sw0p3/phy/mdiobus
-        echo -n stmmac-1:05 > $SOC_PATH/$IP_REF_NAME/net/sw0p2/phy/mdiobus
+    #wait_sysfs $SOC_PATH/$IP_REF_NAME/net/sw0p3/phy/mdiobus
+    wait_sysfs $SOC_PATH/$IP_REF_NAME/net/eth3/phy/mdiobus
+    if [ -e $SOC_PATH/$IP_REF_NAME/net/eth3/phy/mdiobus ]; then
+        echo -n stmmac-1:04 > $SOC_PATH/$IP_REF_NAME/net/eth3/phy/mdiobus
+        echo -n stmmac-1:05 > $SOC_PATH/$IP_REF_NAME/net/eth2/phy/mdiobus
     else
-        echo "[ERROR]: $SOC_PATH/$IP_REF_NAME/net/sw0p3/phy/mdiobus not available"
+        echo "[ERROR]: $SOC_PATH/$IP_REF_NAME/net/eth3/phy/mdiobus not available"
         echo ""
         exit 1
     fi
 
-    echo 170 > /sys/class/net/sw0p2/phy/delay1000tx_min
-    echo 200 > /sys/class/net/sw0p2/phy/delay1000tx_max
-    echo 170 > /sys/class/net/sw0p3/phy/delay1000tx_min
-    echo 200 > /sys/class/net/sw0p3/phy/delay1000tx_max
-    echo 520 > /sys/class/net/sw0p2/phy/delay1000rx_min
-    echo 570 > /sys/class/net/sw0p2/phy/delay1000rx_max
-    echo 520 > /sys/class/net/sw0p3/phy/delay1000rx_min
-    echo 570 > /sys/class/net/sw0p3/phy/delay1000rx_max
+    echo 170 > /sys/class/net/eth2/phy/delay1000tx_min
+    echo 200 > /sys/class/net/eth2/phy/delay1000tx_max
+    echo 170 > /sys/class/net/eth3/phy/delay1000tx_min
+    echo 200 > /sys/class/net/eth3/phy/delay1000tx_max
+    echo 520 > /sys/class/net/eth2/phy/delay1000rx_min
+    echo 570 > /sys/class/net/eth2/phy/delay1000rx_max
+    echo 520 > /sys/class/net/eth3/phy/delay1000rx_min
+    echo 570 > /sys/class/net/eth3/phy/delay1000rx_max
 }
 
 # Set the interfaces up like in the interfaces files
@@ -61,21 +62,21 @@ st_configure() {
 set_interfaces_up()
 {
     get_mac
-    ip link set dev sw0ep address $MAC
-    ip link set dev sw0ep up
+    ip link set dev eth address $MAC
+    ip link set dev eth up
     # ask to network to put an ip address on this interface
     # udhcpc -i sw0ep > /dev/null 2>&1 &
-    ip addr add 192.168.0.10 dev sw0ep
-    ip route add 192.168.0.0/24 dev sw0ep
+    ip addr add 192.168.0.10 dev eth
+    ip route add 192.168.0.0/24 dev eth
 
     sleep 1
 
     ip link add name br0 type bridge
     ip link set dev br0 up
-    ip link set dev sw0p1 master br0 up
-    ip link set dev sw0p2 master br0 up
-    ip link set dev sw0p3 master br0 up
-    ip link set dev sw0ep up
+    ip link set dev rename4 master br0 up
+    ip link set dev eth2 master br0 up
+    ip link set dev eth3 master br0 up
+    ip link set dev eth up
 }
 
 # Set the interfaces down like in the interfaces files
@@ -85,7 +86,7 @@ set_interfaces_down()
     ip link set dev br0 down
     ip link delete dev br0
 
-    ip link set dev sw0ep down
+    ip link set dev eth down
 }
 
 # Start the deamons as they would do at start
@@ -94,7 +95,7 @@ start_daemons()
 {
     # stop NTP service
     systemctl stop systemd-timesyncd
-    systemctl stop ntpd
+    #systemctl stop ntpd
 
     ip link set br0 type bridge stp_state 1
 
