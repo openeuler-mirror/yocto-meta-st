@@ -34,6 +34,8 @@ RDEPENDS:packagegroup-x-linux-ai-tflite = "  \
     ${PYTHON_PN}-tensorflow-lite             \
     tensorflow-lite-tools                    \
     tensorflow-lite                          \
+    stai-mpu-image-classification-python-tfl \
+    stai-mpu-object-detection-python-tfl     \
 "
 
 SUMMARY:packagegroup-x-linux-ai-coral = "X-LINUX-AI TensorFlow Lite Edge TPU components"
@@ -47,6 +49,8 @@ RDEPENDS:packagegroup-x-linux-ai-coral = "      \
     ${PYTHON_PN}-tensorflow-lite                \
     tensorflow-lite                             \
     coral-edgetpu-benchmark                     \
+    stai-mpu-image-classification-python-coral  \
+    stai-mpu-object-detection-python-coral      \
 "
 
 SUMMARY:packagegroup-x-linux-ai-onnxruntime = "X-LINUX-AI ONNX Runtime components"
@@ -57,6 +61,8 @@ RDEPENDS:packagegroup-x-linux-ai-onnxruntime = " \
     onnxruntime                              \
     onnxruntime-tools                        \
     ${PYTHON_PN}-onnxruntime                 \
+    stai-mpu-image-classification-python-ort \
+    stai-mpu-object-detection-python-ort     \
 "
 
 SUMMARY:packagegroup-x-linux-ai-npu = "X-LINUX-AI minimum NPU components"
@@ -67,4 +73,8 @@ RDEPENDS:packagegroup-x-linux-ai-npu += "\
     tim-vx                    \
     tim-vx-tools              \
     nbg-benchmark             \
+    stai-mpu-image-classification-python-ovx  \
+    stai-mpu-object-detection-python-ovx \
+    stai-mpu-semantic-segmentation-python-ovx \
+    stai-mpu-pose-estimation-python-ovx \
 "
