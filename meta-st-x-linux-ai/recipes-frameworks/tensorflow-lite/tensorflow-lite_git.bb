@@ -34,6 +34,7 @@ DEPENDS = "zlib \
 	   swig-native \
 	   ${PYTHON_PN} \
 	   gzip-native \
+	   ca-certificates-native \
 	  "
 
 python () {
@@ -75,6 +76,7 @@ do_generate_toolchain_file:append() {
 do_configure[network] = "1"
 
 do_configure:prepend() {
+	export GIT_SSL_CAINFO="${STAGING_ETCDIR_NATIVE}/ssl/certs/ca-bundle.crt"
     if [ -n "${http_proxy}" ]; then
         export HTTP_PROXY=${http_proxy}
         export http_proxy=${http_proxy}
