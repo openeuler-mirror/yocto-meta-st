@@ -1,4 +1,4 @@
-SPLASH_IMG ?= OpenSTLinux_background_480x272.png
+SPLASH_IMG ?= MYiR_background_1024x600.png 
 SPLASH_IMG_ROT ?= OpenSTLinux_background_480x272_rotation.png
 
 all: modeset
