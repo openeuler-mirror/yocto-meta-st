@@ -10,6 +10,8 @@ ENABLE_IMAGE_LICENSE_SUMMARY = "0"
 
 # Remove WIC image generation for the partition image
 IMAGE_FSTYPES:remove = "${WKS_IMAGE_FSTYPES}"
+# Remove U-Boot env ubi image generation for the partition image
+IMAGE_FSTYPES:remove = "ubootenvmultiubi"
 
 # Append DISTRO to image name even if we're not using ST distro setting
 # Mandatory to ease flashlayout file configuration

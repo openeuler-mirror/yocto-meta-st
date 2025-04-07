@@ -8,7 +8,7 @@ SRCREV = "3c3cb0ed91055d3ea23864264fa71bcc6151af56"
 
 PV = "3.16.0.${SRCPV}"
 
-DEPENDS = "optee-client virtual/optee-os python3-pycryptodomex-native"
+DEPENDS = "optee-client virtual-optee-os python3-pycryptodomex-native"
 DEPENDS += "python3-cryptography-native"
 DEPENDS += "openssl"
 
