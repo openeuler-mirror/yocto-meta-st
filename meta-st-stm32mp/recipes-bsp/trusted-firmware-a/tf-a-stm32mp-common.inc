@@ -6,20 +6,18 @@ LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://license.rst;md5=1dd070c98a281d18d9eefd938729b031"
 CVE_PRODUCT = "arm:trusted_firmware-a"
 
-#SRC_URI = "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;protocol=https;branch=lts-v2.8"
-TFA_SRC_URI ?= "git://github.com/MYiR-Dev/myir-st-arm-trusted-firmware.git;protocol=https"
-SRC_URI = "${TFA_SRC_URI};branch=develop-ld25x-v2.8.15"
-#SRCREV= "${AUTOREV}"
-SRCREV= "b1d29739ddacb8ec38bf3fb08784fcabe102f274"
+TFA_SRC_URI ?= "git://github.com/MYiR-Dev/myir-st-arm-trusted-firmware.git;protocol=https;branch=develop-ld25x-v2.10"
+SRC_URI = "${TFA_SRC_URI}"
+SRCREV = "${AUTOREV}"
 
 #SRC_URI += " \
-#    file://0001-v2.8-stm32mp-r2.patch \
+#    file://0001-v2.10-stm32mp-r1.patch \
 #    "
 
-TF_A_VERSION = "v2.8"
-TF_A_SUBVERSION = ".15"
+TF_A_VERSION = "v2.10"
+TF_A_SUBVERSION = ".5"
 TF_A_TARGET = "stm32mp"
-TF_A_RELEASE = "r2"
+TF_A_RELEASE = "r1"
 PV = "${TF_A_VERSION}${TF_A_SUBVERSION}-${TF_A_TARGET}-${TF_A_RELEASE}"
 
 ARCHIVER_ST_BRANCH = "${TF_A_VERSION}-${TF_A_TARGET}"
@@ -35,7 +33,7 @@ S = "${WORKDIR}/git"
 BBCLASSEXTEND = "devupstream:target"
 
 SRC_URI:class-devupstream = "git://github.com/STMicroelectronics/arm-trusted-firmware.git;protocol=https;branch=${ARCHIVER_ST_BRANCH}"
-SRCREV:class-devupstream = "1568486ae9e1c15c0add1bc80e6fe225fa90714a"
+SRCREV:class-devupstream = "75f8c318eec5e0a710e2edbef550a0b10c8942a9"
 
 # ---------------------------------
 # Configure default preference to manage dynamic selection between tarball and github

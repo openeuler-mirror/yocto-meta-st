@@ -80,11 +80,23 @@ python __anonymous () {
                     # Manage IMAGE_SUMMARY_LIST configuration according to PARTITIONS_IMAGE set
                     if d.getVar('ENABLE_IMAGE_LICENSE_SUMMARY') == "1":
                         if items[2] != '':
-                            image_summary_list += items[0] + ':' + items[2] + ';'
+                            if d.expand(items[1])[-2:] != 'fs':
+                                image_summary_list += items[0] + ':' + items[2] + ':' + items[1] + 'fs;'
+                            else:
+                                image_summary_list += items[0] + ':' + items[2] + ':' + items[1] + ';'
                         else:
                             # Set '/' as default mountpoint for rootfs in IMAGE_SUMMARY_LIST
-                            image_summary_list += items[0] + ':' + '/' + ';'
+                            if d.expand(items[1])[-2:] != 'fs':
+                                image_summary_list += items[0] + ':' + '/' + ':' + items[1] + 'fs;'
+                            else:
+                                image_summary_list += items[0] + ':' + '/' + ':' + items[1] + ';'
+
                     break
+
+    images_multiubi_depends = d.getVar('STM32MP_UBI_VOLUME_IMAGE_DEPENDS') or ""
+    if len(images_multiubi_depends) > 0:
+        for img_dep in images_multiubi_depends.split():
+            image_partitions.append(img_dep)
 
     # Reset IMAGE_LIST_SUMMARY with computed partition configuration
     if d.getVar('ENABLE_IMAGE_LICENSE_SUMMARY') == "1":
