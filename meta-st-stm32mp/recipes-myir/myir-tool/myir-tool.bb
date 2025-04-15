@@ -7,13 +7,8 @@ SRC_URI += " \
 		file://etc/myir-hostapd.conf \
 		file://etc/myir-udhcpd.conf \
 		file://bcmd  \
-		file://usr/lib/locale/zh_CN  \
+		file://usr/bin/ \
 		file://lib/firmware/brcm  \
- 		file://usr/bin/ \
-		file://10-static-end1.network \
-		file://11-static-end2.network \
-		file://bt.service \
-		file://OpenAMP_TTY_echo \
 		file://LICENSE \
 "
 S="${WORKDIR}"
@@ -21,37 +16,28 @@ S="${WORKDIR}"
 inherit  systemd
 
 do_install() {
-	install -d ${D}${systemd_system_unitdir}
 	install -d ${D}${bindir}
 	install -d ${D}${nonarch_base_libdir}/firmware/bcmd/
 	install -d ${D}${nonarch_base_libdir}/firmware/brcm/
 	install -d ${D}/etc/myir_test/
 	install -d ${D}/etc/
-	install -d ${D}/usr/lib/locale/
-	install -d ${D}/${sysconfdir}/systemd/network/
 
-	install -m 755 ${S}/10-static-end1.network  ${D}/${sysconfdir}/systemd/network/
-	install -m 755 ${S}/11-static-end2.network  ${D}/${sysconfdir}/systemd/network/
-        install -m 755 ${S}/etc/myir_test/* ${D}/etc/myir_test/ 
-        install -m 755 ${S}/etc/myir-hostapd.conf ${D}/etc/myir-hostapd.conf 
-        install -m 755 ${S}/etc/myir-udhcpd.conf ${D}/etc/myir-udhcpd.conf
 	install -m 755 ${S}${bindir}/* ${D}/${bindir}/
-        install -m 0644 ${S}/bcmd/* ${D}${nonarch_base_libdir}/firmware/bcmd/ 
-        install -m 0644 ${S}/bcmd/BCM4345C5_003.006.006.1043.1093.hcd ${D}${nonarch_base_libdir}/firmware/brcm/
-        install -m 0644 ${S}/lib/firmware/brcm/* ${D}${nonarch_base_libdir}/firmware/brcm/ 
-	cp -r ${S}/usr/lib/locale/zh_CN ${D}/usr/lib/locale/
+	install -m 755 ${S}/etc/myir_test/* ${D}/etc/myir_test/ 
+	install -m 755 ${S}/etc/myir-hostapd.conf ${D}/etc/myir-hostapd.conf 
+	install -m 755 ${S}/etc/myir-udhcpd.conf ${D}/etc/myir-udhcpd.conf
+	install -m 0644 ${S}/bcmd/* ${D}${nonarch_base_libdir}/firmware/bcmd/ 
+	install -m 0644 ${S}/bcmd/BCM4345C5_003.006.006.1043.1093.hcd ${D}${nonarch_base_libdir}/firmware/brcm/
+	install -m 0644 ${S}/lib/firmware/brcm/* ${D}${nonarch_base_libdir}/firmware/brcm/ 
 
-	install -m 755 ${S}/OpenAMP_TTY_echo ${D}/etc/myir_test/
-	install -m 644 ${WORKDIR}/bt.service ${D}${systemd_system_unitdir}/bt.service
 }
 
-FILES:${PN} =" ${bindir}   \
-              ${nonarch_base_libdir}/firmware/bcmd/  \
-	      /etc/myir_test/ \
-	      /etc/ \
-	      /usr/lib \
-	     ${sysconfdir}/systemd/network/ \
-	     /usr/lib/locale/zh_CN/* \
+FILES:${PN} = " \
+	${bindir} \
+	${nonarch_base_libdir}/firmware/bcmd/  \
+	${nonarch_base_libdir}/firmware/brcm/  \
+	/etc/myir_test/ \
+	/etc/ \
 "
 FILES_${PN}-dbg += "${libdir}/.debug"
 INSANE_SKIP_${PN} = "ldflags"
@@ -59,7 +45,3 @@ INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 INHIBIT_PACKAGE_STRIP = "1"
 INSANE_SKIP_${PN} = "${ERROR_QA} ${WARN_QA}"
 INSANE_SKIP:${PN} = "file-rdeps"
-
-SYSTEMD_PACKAGES = "${PN}"
-SYSTEMD_SERVICE:${PN} = "bt.service"
-SYSTEMD_AUTO_ENABLE = "enable"
