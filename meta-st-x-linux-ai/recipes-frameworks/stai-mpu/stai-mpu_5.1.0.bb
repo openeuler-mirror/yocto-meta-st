@@ -103,6 +103,20 @@ do_install:append:stm32mp25common(){
     install -m 0755 ${S}/aarch64/tools/stai_mpu_benchmark         ${D}${prefix}/local/bin/${PN}-${PVB}/tools
     install -m 0755 ${S}/aarch64/tools/stai_mpu_benchmark.py      ${D}${prefix}/local/bin/${PN}-${PVB}/tools
     chrpath -r '$ORIGIN' ${D}${prefix}/local/bin/${PN}-${PVB}/tools/stai_mpu_benchmark
+
+    # libstai_mpu.so hardcoded "/usr/lib" to load ort.so, tflite.so, ovx.so, but in openeuler
+    # "/usr/lib64" is used to hold libraries, so set up a link in /usr/lib as a workaround
+    if [ x${baselib} == x"lib64" ]; then
+        install -d ${D}${nonarch_libdir}
+
+        cd ${D}${nonarch_libdir}
+
+        ln -sf ../${baselib}/libstai_mpu_ort.so.${PVB}    libstai_mpu_ort.so.${MAJOR}
+        ln -sf ../${baselib}/libstai_mpu_tflite.so.${PVB} libstai_mpu_tflite.so.${MAJOR}
+        ln -sf ../${baselib}/libstai_mpu_ovx.so.${PVB}    libstai_mpu_ovx.so.${MAJOR}
+
+        cd -
+    fi
 }
 
 PACKAGES += "${PN}-tools ${PYTHON_PN}-${PN} ${PN}-tflite ${PN}-ort "
@@ -110,9 +124,9 @@ PACKAGES:append:stm32mp25common = " ${PN}-ovx "
 PROVIDES += "${PYTHON_PN}-${PN} ${PN}-tflite ${PN}-ort ${PN}-ovx"
 
 FILES:${PN} = " ${libdir}/libstai_mpu.so.*  "
-FILES:${PN}-tflite = "${libdir}/libstai_mpu_tflite.so.* "
-FILES:${PN}-ort = " ${libdir}/libstai_mpu_ort.so.* "
-FILES:${PN}-ovx = " ${libdir}/libstai_mpu_ovx.so.* "
+FILES:${PN}-tflite = "${libdir}/libstai_mpu_tflite.so.* ${nonarch_libdir}/libstai_mpu_tflite.so.*"
+FILES:${PN}-ort = " ${libdir}/libstai_mpu_ort.so.* ${nonarch_libdir}/libstai_mpu_ort.so.*"
+FILES:${PN}-ovx = " ${libdir}/libstai_mpu_ovx.so.* ${nonarch_libdir}/libstai_mpu_ovx.so.*"
 
 FILES:${PN}-tools = "${prefix}/local/bin/${PN}-${PVB}/tools/*"
 FILES:${PN}-dev = " ${libdir}/libstai_mpu.so \
