@@ -28,6 +28,14 @@ inherit bin_package
 
 do_install:append() {
     rm ${D}/TTTECH_license.txt
+    # The prebuilt tarball installs into the architecture-neutral /usr/lib,
+    # but ${libdir} is /usr/lib64 on openEuler's 64-bit targets. Relocate
+    # the libraries so they match FILES:${PN} and the linker search path.
+    if [ -d ${D}${nonarch_libdir} ]; then
+        install -d ${D}${libdir}
+        mv ${D}${nonarch_libdir}/lib* ${D}${libdir}/
+        rmdir --ignore-fail-on-non-empty ${D}${nonarch_libdir}
+    fi
 }
 FILES:${PN} = "${libdir}/lib*.so.*"
 
