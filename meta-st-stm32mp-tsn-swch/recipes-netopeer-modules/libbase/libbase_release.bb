@@ -7,34 +7,28 @@ INHIBIT_PACKAGE_STRIP = "1"
 SRC_URI = "${TSN_SRC_URI}"
 SRCREV = "${TSN_SRCREV}"
 
-PV = "st-1.6.8"
+PV = "st-1.6.9"
 
-TTTECH_DIR = "tsn_sw_base.netopeer-modules/libbase"
+TTTECH_DIR = "tsn_sw_base.netopeer-modules/${TTTECH_BINARY_ARCH}"
 S = "${WORKDIR}/git/${TTTECH_DIR}"
 
 DEPENDS = "coreutils-native"
 
+# ------------------------------------------------------------------
+TTTECH_BINARY_ARCH = "aarch64"
+TTTECH_BINARY_DATE = "2026-06-30"
+TTTECH_BINARY_TARBALL = "TTTECH-libbase-${TTTECH_BINARY_ARCH}-${TTTECH_BINARY_DATE}"
+TTTECH_BINARIES_PATH = "${WORKDIR}/git/tsn_sw_base.netopeer-modules"
+inherit binaries-unpack
+
+
 EXTRA_OEMAKE = "-e -j 1 CCFLAGS='${CFLAGS} -fPIC -D_GNU_SOURCE -I${S}/include -DVER_FULL=\"1.0\"'"
 
-do_compile(){
-  oe_runmake clean
-  ${STAGING_BINDIR_NATIVE}/sync
-  oe_runmake all
-}
+inherit bin_package
 
-do_install(){
-  rm -rf ${D}
-  ${STAGING_BINDIR_NATIVE}/sync
-  mkdir -p ${D}${includedir}/libbase
-  ${STAGING_BINDIR_NATIVE}/sync
-  mkdir -p ${D}${libdir}
-  ${STAGING_BINDIR_NATIVE}/sync
-  install -Dm 0777 ${S}/build/*.so.* ${D}${libdir}/
-  install -Dm 0777 ${S}/build/lib*.a ${D}${libdir}/
-  ${STAGING_BINDIR_NATIVE}/sync
-  install -m 0644 ${S}/include/*.h ${D}/${includedir}/libbase
+do_install:append() {
+    rm ${D}/TTTECH_license.txt
 }
-
 FILES:${PN} = "${libdir}/lib*.so.*"
 
 FILES:${PN}-dev += " ${includedir}/libbase/*"

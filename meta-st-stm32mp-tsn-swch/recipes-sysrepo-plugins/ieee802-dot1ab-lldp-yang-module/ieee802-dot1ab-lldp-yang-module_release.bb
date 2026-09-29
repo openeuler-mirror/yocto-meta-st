@@ -5,36 +5,32 @@ LICENSE = "TTTECH-license"
 SRC_URI = "${TSN_SRC_URI}"
 SRCREV = "${TSN_SRCREV}"
 
-TTTECH_DIR = "tsn_sw_base.sysrepo-plugins/ieee802-dot1ab-lldp-yang-module"
+TTTECH_DIR = "tsn_sw_base.sysrepo-plugins/${TTTECH_BINARY_ARCH}"
 S = "${WORKDIR}/git/${TTTECH_DIR}"
 
-PV = "st-1.6.8"
+PV = "st-1.6.9"
+
+# ------------------------------------------------------------------
+TTTECH_BINARY_ARCH = "aarch64"
+TTTECH_BINARY_DATE = "2026-06-30"
+TTTECH_BINARY_TARBALL = "TTTECH-sysrepo-plugins-${TTTECH_BINARY_ARCH}-${TTTECH_BINARY_DATE}"
+TTTECH_BINARIES_PATH = "${WORKDIR}/git/tsn_sw_base.sysrepo-plugins"
+inherit binaries-unpack
 
 DEPENDS = "libbase lldpd libyang libnetconf2 sysrepo coreutils openssh openssl openssh-native libbsd"
 
-FILES:${PN} += "${libdir}/sysrepo/* /etc/netopeer2/*"
+FILES:${PN} += "${libdir}/sysrepo/* ${sysconfdir}/netopeer2/*"
 
-inherit cmake pkgconfig
 
-# Specify any options you want to pass to cmake using EXTRA_OECMAKE:
-OECMAKE_C_FLAGS = "${HOST_CC_ARCH} ${TOOLCHAIN_OPTIONS} ${TARGET_CPPFLAGS} -Wno-error=format-truncation -Wno-error=cpp"
-EXTRA_OECMAKE = " -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE:String=Release -DSYSREPOCTL_EXECUTABLE=/usr/bin/sysrepoctl -DSYSREPOCFG_EXECUTABLE=/usr/bin/sysrepocfg -DCHMOD_EXECUTABLE=/bin/chmod"
-
-do_install:append () {
-    install -d ${D}/etc/netopeer2/yang
-    install -m 0644 ${S}/../YANG_modules_repository/ieee802-dot1ab-lldp.yang ${D}/etc/netopeer2/yang
-    # provided by ietf-interfaces-yang-module
-    # install -m 0644 ${S}/../YANG_modules_repository/iana-if-type.yang ${D}/etc/netopeer2/yang
-    install -m 0644 ${S}/../YANG_modules_repository/ieee802-dot1ab-types.yang ${D}/etc/netopeer2/yang
-    # provided by ieee802-dot1q-bridge-yang-module
-    # install -m 0644 ${S}/../YANG_modules_repository/ieee802-dot1q-bridge.yang ${D}/etc/netopeer2/yang
-    install -m 0644 ${S}/../YANG_modules_repository/ieee802-dot1q-types.yang ${D}/etc/netopeer2/yang
-    # install -m 0644 ${S}/../YANG_modules_repository/ieee802-types.yang ${D}/etc/netopeer2/yang
-    # provided by ietf-interfaces-yang-module
-    # install -m 0644 ${S}/../YANG_modules_repository/ietf-interfaces.yang ${D}/etc/netopeer2/yang
-    install -m 0644 ${S}/../YANG_modules_repository/ietf-routing.yang ${D}/etc/netopeer2/yang
-    # provided by ieee802-dot1q-fqtss-yang-module
-    #install -m 0644 ${S}/../YANG_modules_repository/ietf-yang-types.yang ${D}/etc/netopeer2/yang
+do_install () {
+    install -d ${D}/${sysconfdir}/netopeer2/yang ${D}/${libdir}/sysrepo/plugins/
+    # yang modules
+    install -m 0644 ${S}/${sysconfdir}/netopeer2/yang/ieee802-dot1ab-lldp.yang ${D}/${sysconfdir}/netopeer2/yang
+    install -m 0644 ${S}/${sysconfdir}/netopeer2/yang/ieee802-dot1ab-types.yang ${D}/${sysconfdir}/netopeer2/yang
+    install -m 0644 ${S}/${sysconfdir}/netopeer2/yang/ieee802-dot1q-types.yang ${D}/${sysconfdir}/netopeer2/yang
+    install -m 0644 ${S}/${sysconfdir}/netopeer2/yang/ietf-routing.yang ${D}/${sysconfdir}/netopeer2/yang
+    # library
+    install -m 0644 ${S}/${libdir}/sysrepo/plugins/libieee802-dot1ab-lldp-yang-module.so ${D}/${libdir}/sysrepo/plugins/
 
     if [ "${libdir}" != "/usr/lib" ];
     then
@@ -43,4 +39,4 @@ do_install:append () {
         fi
     fi
 }
-INSANE_SKIP:${PN} = "file-rdeps"
+
