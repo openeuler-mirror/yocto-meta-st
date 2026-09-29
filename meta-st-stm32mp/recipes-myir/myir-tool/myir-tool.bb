@@ -1,5 +1,5 @@
 DESCRIPTION = "myir tool and wifi firmware"
-LICENSE = "LGPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=309cc7bace8769cfabdd34577f654f8e"
 
 SRC_URI += " \
