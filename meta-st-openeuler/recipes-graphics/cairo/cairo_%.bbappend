@@ -1,5 +1,8 @@
-PACKAGECONFIG = " ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11 xcb', '', d)} \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'egl glesv2', '', d)} \
+# openEuler ships a meson-based cairo recipe which only defines the xlib,
+# xcb and trace PACKAGECONFIG options; the egl/glesv2 options understood by
+# the upstream autotools recipe are invalid here and trigger
+# invalid-packageconfig warnings.
+PACKAGECONFIG = " ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xlib xcb', '', d)} \
     "
 
 do_install:append() {
