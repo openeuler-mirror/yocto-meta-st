@@ -14,7 +14,7 @@ SRCREV = "${TSN_SRCREV}"
 TTTECH_DIR = "tsn_sw_base.edge-lkm"
 S = "${WORKDIR}/git/${TTTECH_DIR}"
 
-PV = "st-1.6.7"
+PV = "st-1.6.9-1"
 
 SRC_URI += "\
     file://edgx_sw_modload.conf \
@@ -36,3 +36,5 @@ MAKE_TARGETS = "sched=fsc sid=sid"
 
 FILES_${PN}-dev += "${includedir}/${PN}/edge.h"
 FILES:${PN} += "${sysconfdir}/"
+
+do_create_runtime_spdx[depends] += "virtual/kernel:do_create_runtime_spdx"

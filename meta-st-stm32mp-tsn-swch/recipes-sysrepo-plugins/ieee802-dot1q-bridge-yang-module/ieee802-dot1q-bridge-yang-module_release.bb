@@ -5,30 +5,34 @@ LICENSE = "TTTECH-license"
 SRC_URI = "${TSN_SRC_URI}"
 SRCREV = "${TSN_SRCREV}"
 
-SRC_URI += "file://0001-Patch-to-support-arm64-bits-compilation.patch"
-
-TTTECH_DIR = "tsn_sw_base.sysrepo-plugins/ieee802-dot1q-bridge-yang-module"
+TTTECH_DIR = "tsn_sw_base.sysrepo-plugins/${TTTECH_BINARY_ARCH}"
 S = "${WORKDIR}/git/${TTTECH_DIR}"
 
-PV = "st-1.6.8"
+PV = "st-1.6.9"
+
+# ------------------------------------------------------------------
+TTTECH_BINARY_ARCH = "aarch64"
+TTTECH_BINARY_DATE = "2026-06-30"
+TTTECH_BINARY_TARBALL = "TTTECH-sysrepo-plugins-${TTTECH_BINARY_ARCH}-${TTTECH_BINARY_DATE}"
+TTTECH_BINARIES_PATH = "${WORKDIR}/git/tsn_sw_base.sysrepo-plugins"
+inherit binaries-unpack
 
 DEPENDS = "libbase libtsn libyang libnetconf2 sysrepo coreutils openssh openssl openssh-native libbsd"
 
-FILES:${PN} += "${libdir}/sysrepo/* /etc/netopeer2/*"
+FILES:${PN} += "${libdir}/sysrepo/* ${sysconfdir}/netopeer2/*"
 
-inherit cmake pkgconfig
+do_install () {
+    install -d ${D}/${sysconfdir}/netopeer2/yang ${D}/${libdir}/sysrepo/plugins/
 
-# Specify any options you want to pass to cmake using EXTRA_OECMAKE:
-OECMAKE_C_FLAGS = "${HOST_CC_ARCH} ${TOOLCHAIN_OPTIONS} ${TARGET_CPPFLAGS} -Wno-error=format-truncation -Wno-error=cpp"
-EXTRA_OECMAKE = " -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE:String=Release -DSYSREPOCTL_EXECUTABLE=/usr/bin/sysrepoctl -DSYSREPOCFG_EXECUTABLE=/usr/bin/sysrepocfg -DCHMOD_EXECUTABLE=/bin/chmod"
+    # yang modules
+    install -m 0644 ${S}/${sysconfdir}/netopeer2/yang/ieee802-dot1q-bridge-delays.yang ${D}/${sysconfdir}/netopeer2/yang
+    install -m 0644 ${S}/${sysconfdir}/netopeer2/yang/ieee802-dot1q-bridge.yang ${D}/${sysconfdir}/netopeer2/yang
+    install -m 0644 ${S}/${sysconfdir}/netopeer2/yang/ieee802-dot1q-psfp.yang ${D}/${sysconfdir}/netopeer2/yang
+    install -m 0644 ${S}/${sysconfdir}/netopeer2/yang/ieee802-dot1q-stream-filters-gates.yang ${D}/${sysconfdir}/netopeer2/yang
+    install -m 0644 ${S}/${sysconfdir}/netopeer2/yang/ieee802-types.yang ${D}/${sysconfdir}/netopeer2/yang
+    # library
+    install -m 0644 ${S}/${libdir}/sysrepo/plugins/libieee802-dot1q-bridge-yang-module.so ${D}/${libdir}/sysrepo/plugins/
 
-do_install:append () {
-    install -d ${D}/etc/netopeer2/yang
-    install -m 0644 ${S}/../YANG_modules_repository/ieee802-dot1q-bridge.yang ${D}/etc/netopeer2/yang
-    install -m 0644 ${S}/../YANG_modules_repository/ieee802-dot1q-bridge-delays.yang ${D}/etc/netopeer2/yang
-    install -m 0644 ${S}/../YANG_modules_repository/ieee802-types.yang ${D}/etc/netopeer2/yang
-    install -m 0644 ${S}/../YANG_modules_repository/ieee802-dot1q-stream-filters-gates.yang ${D}/etc/netopeer2/yang
-    install -m 0644 ${S}/../YANG_modules_repository/ieee802-dot1q-psfp.yang ${D}/etc/netopeer2/yang
     if [ "${libdir}" != "/usr/lib" ];
     then
         if [ -d ${D}/usr/lib ]; then
@@ -36,4 +40,4 @@ do_install:append () {
         fi
     fi
 }
-INSANE_SKIP:${PN} = "file-rdeps"
+
