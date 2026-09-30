@@ -18,6 +18,5 @@ PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'kms wayla
                    screenshare \
                    shell-desktop \
                    shell-fullscreen \
-                   shell-kiosk \
                 "
 
