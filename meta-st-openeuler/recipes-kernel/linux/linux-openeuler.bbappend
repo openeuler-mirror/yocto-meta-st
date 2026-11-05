@@ -35,8 +35,16 @@ KERNEL_CONFIG_FRAGMENTS += " ${@bb.utils.contains('MACHINE_FEATURES', 'efi', 'fi
 KERNEL_CONFIG_FRAGMENTS += " file://openeuler-adapt.cfg "
 
 
+# The MICA M33 device tree and defconfig changes cannot go into the
+# myir-st-kernel repository yet, so carry them as local patches. They
+# are only applied when the openamp MCS feature takes over the M33;
+# otherwise the in-kernel stm32_rproc setup must stay untouched.
+MCS_M33_PATCHES = "${@bb.utils.contains('MCS_FEATURES', 'openamp', 'file://0001-arm64-dts-stm32-hand-the-M33-over-to-the-MICA-framework.patch', '', d)}"
+MCS_M33_PATCHES += "${@bb.utils.contains('MCS_FEATURES', 'openamp', 'file://0002-arm64-defconfig-disable-STM32_RPROC-for-MICA-managed-M33.patch', '', d)}"
+
 SRC_URI:append = " \
     file://myir-st-kernel-${PV} \
+    ${MCS_M33_PATCHES} \
     ${KERNEL_CONFIG_FRAGMENTS} \
 "
 
