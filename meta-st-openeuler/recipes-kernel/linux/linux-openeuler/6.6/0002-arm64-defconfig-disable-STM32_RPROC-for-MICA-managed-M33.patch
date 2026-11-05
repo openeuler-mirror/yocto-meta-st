@@ -1,0 +1,43 @@
+From 62fabc4d76d0ab621c7d051c67e37faadbf8afb4 Mon Sep 17 00:00:00 2001
+From: Wayne Ren <renwei@kylinos.cn>
+Date: Thu, 5 Nov 2026 19:41:34 +0800
+Subject: [PATCH] arm64: defconfig: disable STM32_RPROC for MICA-managed M33
+
+The M33 is driven by the mcs_km module through the
+oe,mcs_stm32mp2_remoteproc device tree node, so the in-kernel
+stm32_rproc driver must not be built. Disable it in both the MYD-LD25X
+defconfig and the addon fragment.
+
+Co-Authored-By: DeepSeek-Flash
+Signed-off-by: Wayne Ren <renwei@kylinos.cn>
+---
+ arch/arm64/configs/fragment-02-defconfig-addons.config | 2 +-
+ arch/arm64/configs/myd_stm32mp257x_defconfig           | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/configs/fragment-02-defconfig-addons.config b/arch/arm64/configs/fragment-02-defconfig-addons.config
+index ba2f06db3..106f0e336 100644
+--- a/arch/arm64/configs/fragment-02-defconfig-addons.config
++++ b/arch/arm64/configs/fragment-02-defconfig-addons.config
+@@ -107,7 +107,7 @@ CONFIG_STM32_MDF_ADC=m
+ CONFIG_STM32_MDF_CORE=m
+ CONFIG_STM32_OMI=y
+ CONFIG_STM32_OMM=y
+-CONFIG_STM32_RPROC=y
++# CONFIG_STM32_RPROC is not set
+ CONFIG_STM32_TIMER_CNT=m
+ CONFIG_STMMAC_ETH=y
+ CONFIG_STMMAC_PLATFORM=y
+diff --git a/arch/arm64/configs/myd_stm32mp257x_defconfig b/arch/arm64/configs/myd_stm32mp257x_defconfig
+index b89a63882..5269534d0 100755
+--- a/arch/arm64/configs/myd_stm32mp257x_defconfig
++++ b/arch/arm64/configs/myd_stm32mp257x_defconfig
+@@ -6797,7 +6797,7 @@ CONFIG_ARM_SMMU_V3=y
+ CONFIG_REMOTEPROC=y
+ # CONFIG_REMOTEPROC_CDEV is not set
+ # CONFIG_REMOTEPROC_SRM_CORE is not set
+-CONFIG_STM32_RPROC=y
++# CONFIG_STM32_RPROC is not set
+ # CONFIG_STM32_M0_RPROC is not set
+ CONFIG_TEE_REMOTEPROC=y
+ # end of Remoteproc drivers
