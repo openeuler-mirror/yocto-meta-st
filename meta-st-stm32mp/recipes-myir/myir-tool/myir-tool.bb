@@ -30,6 +30,11 @@ do_install() {
 	install -m 0644 ${S}/bcmd/BCM4345C5_003.006.006.1043.1093.hcd ${D}${nonarch_base_libdir}/firmware/brcm/
 	install -m 0644 ${S}/lib/firmware/brcm/* ${D}${nonarch_base_libdir}/firmware/brcm/ 
 
+	# The BT serdev driver (btbcm) requests the firmware by the plain chip
+	# name 'brcm/BCM4345C5.hcd', so expose the versioned hcd under that
+	# name for the AP6256 combo module (myd-ld25x-oee).
+	ln -sf BCM4345C5_003.006.006.1043.1093.hcd ${D}${nonarch_base_libdir}/firmware/brcm/BCM4345C5.hcd
+
 }
 
 FILES:${PN} = " \
